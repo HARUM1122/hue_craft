@@ -5,7 +5,6 @@ A simple package for building custom color pickers
 TODO: List what your package can do. Maybe include images, gifs, or videos.
 
 ## Example
-Here's a simple example of it
 
 ```dart
 import 'package:flutter/material.dart';
