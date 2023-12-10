@@ -46,25 +46,16 @@ class _HorizontalOpacityPickerState extends State<HorizontalOpacityPicker> {
           Container(
             width: double.infinity,
             height: double.infinity,
-            decoration: BoxDecoration(
-              image:const DecorationImage(
-                image:AssetImage('assets/images/checker_board_pattern.jpg'),
-                fit:BoxFit.cover
-              ),
-              borderRadius:widget.borderRadius
-            ),
-            child: Container(
-              decoration:BoxDecoration(
-                border:widget.border,
-                borderRadius: widget.borderRadius,
-                gradient: LinearGradient(
-                  colors:[
-                    HSVColor.fromAHSV(1.0,widget.hsvColor.hue, widget.hsvColor.saturation, widget.hsvColor.value).toColor(),
-                    HSVColor.fromAHSV(0.0,widget.hsvColor.hue, widget.hsvColor.saturation, widget.hsvColor.value).toColor(),
-                  ],
-                  begin:Alignment.centerLeft,
-                  end:Alignment.centerRight,
-                ),
+            decoration:BoxDecoration(
+              border:widget.border,
+              borderRadius: widget.borderRadius,
+              gradient: LinearGradient(
+                colors:[
+                  HSVColor.fromAHSV(1.0,widget.hsvColor.hue, widget.hsvColor.saturation, widget.hsvColor.value).toColor(),
+                  HSVColor.fromAHSV(0.0,widget.hsvColor.hue, widget.hsvColor.saturation, widget.hsvColor.value).toColor(),
+                ],
+                begin:Alignment.centerLeft,
+                end:Alignment.centerRight,
               ),
             ),
           ),
