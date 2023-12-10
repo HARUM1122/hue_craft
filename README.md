@@ -1,8 +1,5 @@
 # hue_craft
-A simple package for building custom color pickers
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+A simple package for building custom color pickers in flutter
 
 ## Example
 
@@ -107,7 +104,7 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 border:Border.all(color:Colors.black,width: 2),
-                color:hsvToRgb(color)
+                color:hsvToRgb(color) // converting hsvToRgb
               ), 
             )
           ],
@@ -117,4 +114,3 @@ class _HomeState extends State<Home> {
   }
 }
 ```
-## License
