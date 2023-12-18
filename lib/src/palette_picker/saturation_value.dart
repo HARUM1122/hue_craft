@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-typedef ColorCallback = void Function(HSVColor newColor);
-class SvPicker extends StatefulWidget {
+import '../utils/typedefs.dart';
+class SaturationValuePicker extends StatefulWidget {
   final HSVColor hsvColor;
   final ColorCallback onSelected;
   final BorderRadius? borderRadius;
   final double? selectorWidth;
   final double? selectorHeight;
   final BoxDecoration? decoration;
-  const SvPicker({
+  const SaturationValuePicker({
     required this.hsvColor,
     required this.onSelected,
     this.borderRadius,
@@ -17,16 +17,12 @@ class SvPicker extends StatefulWidget {
     super.key
   });
   @override
-  State<SvPicker> createState() => _SvPickerState();
+  State<SaturationValuePicker> createState() => _SaturationValuePickerState();
 }
 
-class _SvPickerState extends State<SvPicker> {
-  void _onDragStart(DragStartDetails details){
-    final percentOffset = _calculatePercentOffset(details.localPosition);
-    widget.onSelected(_hsvColorFromPercentOffset(percentOffset));
-  }
-  void _onDragUpdate(DragUpdateDetails details){
-    final percentOffset = _calculatePercentOffset(details.localPosition);
+class _SaturationValuePickerState extends State<SaturationValuePicker> {
+  void _onDrag(Offset localPosition){
+    final percentOffset = _calculatePercentOffset(localPosition);
     widget.onSelected(_hsvColorFromPercentOffset(percentOffset));
   }
   Offset _calculatePercentOffset(Offset localPos){
@@ -42,8 +38,8 @@ class _SvPickerState extends State<SvPicker> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onPanStart:_onDragStart,
-      onPanUpdate: _onDragUpdate,
+      onPanStart:(details)=>_onDrag(details.localPosition),
+      onPanUpdate:(details)=>_onDrag(details.localPosition),
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Stack(
@@ -88,7 +84,6 @@ class _SvPickerState extends State<SvPicker> {
     );
   }
 }
-// COLOR PICKER PAINTER
 class ColorPickerPainter extends CustomPainter{
   double hue;
   ColorPickerPainter({

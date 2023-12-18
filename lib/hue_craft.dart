@@ -1,7 +1,5 @@
 library hue_craft;
-export 'src/widgets/saturation_value_picker.dart';
-export 'src/widgets/vertical_sliders/hue_picker.dart';
-export 'src/widgets/vertical_sliders/opacity_picker.dart';
-export 'src/widgets/horizontal_sliders/hue_picker.dart';
-export 'src/widgets/horizontal_sliders/opacity_picker.dart';
+export 'src/palette_picker/palette_picker.dart';
+export 'src/opacity_sliders/vertical_opacity.dart';
+export 'src/opacity_sliders/horizontal_opacity.dart';
 export 'src/utils/color_converters.dart';
