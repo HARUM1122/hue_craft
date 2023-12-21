@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/typedefs.dart';
+
 class SaturationValuePicker extends StatefulWidget {
   final HSVColor hsvColor;
   final ColorCallback onSelected;
@@ -7,6 +8,7 @@ class SaturationValuePicker extends StatefulWidget {
   final double? selectorWidth;
   final double? selectorHeight;
   final BoxDecoration? decoration;
+
   const SaturationValuePicker({
     required this.hsvColor,
     required this.onSelected,
@@ -16,101 +18,120 @@ class SaturationValuePicker extends StatefulWidget {
     this.decoration,
     super.key
   });
+
   @override
   State<SaturationValuePicker> createState() => _SaturationValuePickerState();
 }
 
 class _SaturationValuePickerState extends State<SaturationValuePicker> {
-  void _onDrag(Offset localPosition){
+  void _onDrag(Offset localPosition) {
     final percentOffset = _calculatePercentOffset(localPosition);
     widget.onSelected(_hsvColorFromPercentOffset(percentOffset));
   }
-  Offset _calculatePercentOffset(Offset localPos){
+
+  Offset _calculatePercentOffset(Offset localPos) {
     final RenderBox box = context.findRenderObject() as RenderBox;
     return Offset(
-      (localPos.dx/box.size.width).clamp(0.0,1.0),
-      (1.0-(localPos.dy/box.size.height)).clamp(0.0,1.0)
+      (localPos.dx / box.size.width).clamp(0.0, 1.0),
+      (1.0 - (localPos.dy / box.size.height)).clamp(0.0, 1.0),
     );
   }
-  HSVColor _hsvColorFromPercentOffset(Offset percentOffset){
-    return HSVColor.fromAHSV(widget.hsvColor.alpha,widget.hsvColor.hue, percentOffset.dx, percentOffset.dy);
+
+  HSVColor _hsvColorFromPercentOffset(Offset percentOffset) {
+    return HSVColor.fromAHSV(
+      widget.hsvColor.alpha,
+      widget.hsvColor.hue,
+      percentOffset.dx,
+      percentOffset.dy,
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onPanStart:(details)=>_onDrag(details.localPosition),
-      onPanUpdate:(details)=>_onDrag(details.localPosition),
+      onPanStart: (details) => _onDrag(details.localPosition),
+      onPanUpdate: (details) => _onDrag(details.localPosition),
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Stack(
             clipBehavior: Clip.none,
             children: [
               ClipRRect(
-                borderRadius: widget.borderRadius??BorderRadius.zero,
+                borderRadius: widget.borderRadius ?? BorderRadius.zero,
                 child: CustomPaint(
-                  painter:ColorPickerPainter(
-                    hue:widget.hsvColor.hue
-                  ),
-                  size:Size.infinite
+                  painter: ColorPickerPainter(hue: widget.hsvColor.hue),
+                  size: Size.infinite,
                 ),
               ),
-              _buildSelector(Size(constraints.maxWidth,constraints.maxHeight))
+              _buildSelector(Size(constraints.maxWidth, constraints.maxHeight)),
             ],
           );
-        }
+        },
       ),
     );
   }
-  Widget _buildSelector(Size size){
+
+  Widget _buildSelector(Size size) {
     final double saturationPercent = widget.hsvColor.saturation;
-    final double darknessPercent = 1.0-widget.hsvColor.value;
+    final double darknessPercent = 1.0 - widget.hsvColor.value;
+
     return Positioned(
-      left:size.width*saturationPercent,
-      top:size.height*darknessPercent,
-      child:FractionalTranslation(
-        translation: const Offset(-0.5,-0.5),
+      left: size.width * saturationPercent,
+      top: size.height * darknessPercent,
+      child: FractionalTranslation(
+        translation: const Offset(-0.5, -0.5),
         child: Container(
-          width:widget.selectorWidth??10,
-          height:widget.selectorHeight??10,
-          decoration: widget.decoration??BoxDecoration(
-            shape:BoxShape.circle,
-            border:Border.all(
-              color:Colors.black,
-              width:2
-            )
+          width: widget.selectorWidth ?? 10,
+          height: widget.selectorHeight ?? 10,
+          decoration: widget.decoration ?? BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.black,
+              width: 2,
+            ),
           ),
         ),
-      )
+      ),
     );
   }
 }
-class ColorPickerPainter extends CustomPainter{
+
+class ColorPickerPainter extends CustomPainter {
   double hue;
+
   ColorPickerPainter({
-    required this.hue
+    required this.hue,
   });
+
   @override
   void paint(Canvas canvas, Size size) {
     final Shader lightGradientShader = const LinearGradient(
-      colors:[Colors.white,Colors.black],
-      begin:Alignment.topCenter,
-      end:Alignment.bottomCenter
+      colors: [Colors.white, Colors.black],
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
     ).createShader(Offset.zero & size);
+
     final lightPaint = Paint()..shader = lightGradientShader;
     canvas.drawRect(Offset.zero & size, lightPaint);
+
     final Shader saturationGradientShader = LinearGradient(
-      colors:[
+      colors: [
         HSVColor.fromAHSV(1.0, hue, 0.0, 1.0).toColor(),
-        HSVColor.fromAHSV(1.0, hue, 1.0, 1.0).toColor()
+        HSVColor.fromAHSV(1.0, hue, 1.0, 1.0).toColor(),
       ],
-      begin:Alignment.centerLeft,
-      end:Alignment.centerRight
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
     ).createShader(Offset.zero & size);
-    final saturationPaint = Paint()..shader = saturationGradientShader..blendMode = BlendMode.modulate;
+
+    final saturationPaint = Paint()
+      ..shader = saturationGradientShader
+      ..blendMode = BlendMode.modulate;
+
     canvas.drawRect(Offset.zero & size, saturationPaint);
   }
+
   @override
   bool shouldRepaint(ColorPickerPainter oldDelegate) {
-    return hue!=oldDelegate.hue;
+    return hue != oldDelegate.hue;
   }
 }
