@@ -4,8 +4,7 @@ import '../utils/typedefs.dart';
 class HorizontalHuePicker extends StatefulWidget {
   final HSVColor hsvColor;
   final ColorCallback onSelected;
-  final Border? border;
-  final BorderRadiusGeometry? borderRadius;
+  final BoxDecoration? decoration;
   final double? selectorWidth;
   final double? selectorHeight;
   final EdgeInsets? selectorPadding;
@@ -14,8 +13,7 @@ class HorizontalHuePicker extends StatefulWidget {
   const HorizontalHuePicker({
     required this.hsvColor,
     required this.onSelected,
-    this.border,
-    this.borderRadius,
+    this.decoration,
     this.selectorWidth,
     this.selectorHeight,
     this.selectorPadding,
@@ -29,7 +27,7 @@ class HorizontalHuePicker extends StatefulWidget {
 
 class _HorizontalHuePickerState extends State<HorizontalHuePicker> {
   void _onDrag(Offset localPosition) {
-    final sliderPercent = _calculatePercentage(localPosition);
+    final double sliderPercent = _calculatePercentage(localPosition);
     widget.onSelected(widget.hsvColor.withHue(sliderPercent * 360));
   }
 
@@ -44,26 +42,25 @@ class _HorizontalHuePickerState extends State<HorizontalHuePicker> {
       onPanStart: (details) => _onDrag(details.localPosition),
       onPanUpdate: (details) => _onDrag(details.localPosition),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              border: widget.border,
-              borderRadius: widget.borderRadius,
-              gradient: LinearGradient(
-                colors: [
-                  const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0).toColor(),
-                  const HSVColor.fromAHSV(1.0, 51, 1.0, 1.0).toColor(),
-                  const HSVColor.fromAHSV(1.0, 102, 1.0, 1.0).toColor(),
-                  const HSVColor.fromAHSV(1.0, 153, 1.0, 1.0).toColor(),
-                  const HSVColor.fromAHSV(1.0, 204, 1.0, 1.0).toColor(),
-                  const HSVColor.fromAHSV(1.0, 255, 1.0, 1.0).toColor(),
-                  const HSVColor.fromAHSV(1.0, 306, 1.0, 1.0).toColor(),
-                  const HSVColor.fromAHSV(1.0, 360, 1.0, 1.0).toColor(),
-                ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: widget.decoration ?? BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0).toColor(),
+                    const HSVColor.fromAHSV(1.0, 51, 1.0, 1.0).toColor(),
+                    const HSVColor.fromAHSV(1.0, 102, 1.0, 1.0).toColor(),
+                    const HSVColor.fromAHSV(1.0, 153, 1.0, 1.0).toColor(),
+                    const HSVColor.fromAHSV(1.0, 204, 1.0, 1.0).toColor(),
+                    const HSVColor.fromAHSV(1.0, 255, 1.0, 1.0).toColor(),
+                    const HSVColor.fromAHSV(1.0, 306, 1.0, 1.0).toColor(),
+                    const HSVColor.fromAHSV(1.0, 360, 1.0, 1.0).toColor(),
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
               ),
             ),
           ),
@@ -77,13 +74,13 @@ class _HorizontalHuePickerState extends State<HorizontalHuePicker> {
   }
 
   Widget _buildSelector() {
-    final huePercent = widget.hsvColor.hue / 360;
+    final double huePercent = widget.hsvColor.hue / 360;
     return Align(
       alignment: Alignment(2 * huePercent - 1.0, 0.0),
       child: Container(
-        decoration: widget.selectorDecoration,
         width: widget.selectorWidth ?? 5,
         height: widget.selectorHeight ?? double.infinity,
+        decoration: widget.selectorDecoration,
         color: widget.selectorDecoration != null ? null : Colors.white,
       ),
     );

@@ -5,6 +5,7 @@ A simple package for building custom color pickers in flutter
 
 ```dart
 import 'package:flutter/material.dart';
+
 import 'package:hue_craft/hue_craft.dart'; // Import the package
 
 void main() => runApp(const App());
@@ -14,7 +15,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Home(),
     );
@@ -22,14 +23,14 @@ class App extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
-  Home({super.key});
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  HSVColor color = const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0);
+  HSVColor _color = const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0); // initial color
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +46,12 @@ class _HomeState extends State<Home> {
               width: MediaQuery.of(context).size.width - 50,
               height: MediaQuery.of(context).size.height / 2.5,
               child: SaturationValuePicker(
-                hsvColor: color,
+                hsvColor: _color,
                 onSelected: (hsvColor) {
                   setState(() {
-                    color = hsvColor;
+                    _color = hsvColor;
+                    print("RGB: ${hsvToRgb(hsvColor).toString()}");
+                    print("CMYK: ${hsvToCmyk(hsvColor).toString()}");
                   });
                 },
               ),
@@ -58,9 +61,7 @@ class _HomeState extends State<Home> {
               width: MediaQuery.of(context).size.width - 50,
               height: MediaQuery.of(context).size.height / 24,
               child: HorizontalHuePicker( // You can also use Vertical one
-                hsvColor: color,
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(4),
+                hsvColor: _color,
                 selectorWidth: 14,
                 selectorDecoration: BoxDecoration(
                   color: Colors.transparent,
@@ -69,7 +70,9 @@ class _HomeState extends State<Home> {
                 ),
                 onSelected: (hsvColor) {
                   setState(() {
-                    color = hsvColor;
+                    _color = hsvColor;
+                    print("RGB: ${hsvToRgb(hsvColor).toString()}");
+                    print("CMYK: ${hsvToCmyk(hsvColor).toString()}");
                   });
                 },
               ),
@@ -79,9 +82,7 @@ class _HomeState extends State<Home> {
               width: MediaQuery.of(context).size.width - 50,
               height: MediaQuery.of(context).size.height / 24,
               child: HorizontalOpacityPicker( // You can also use Vertical one
-                hsvColor: color,
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(4),
+                hsvColor: _color,
                 selectorWidth: 14,
                 selectorDecoration: BoxDecoration(
                   color: Colors.transparent,
@@ -90,7 +91,9 @@ class _HomeState extends State<Home> {
                 ),
                 onSelected: (hsvColor) {
                   setState(() {
-                    color = hsvColor;
+                    _color = hsvColor;
+                    print("RGB: ${hsvToRgb(hsvColor).toString()}");
+                    print("CMYK: ${hsvToCmyk(hsvColor).toString()}");
                   });
                 },
               ),
@@ -102,7 +105,7 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(color: Colors.black, width: 2),
-                color: hsvToRgb(color), // converting hsvToRgb
+                color: _color.toColor()
               ),
             ),
           ],

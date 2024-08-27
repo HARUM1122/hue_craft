@@ -8,3 +8,7 @@
 * Fixed bugs
 ## 0.0.5
 * Added hsvToHex
+## 0.0.6
+* Made some improvements
+## 0.0.7
+* Removed main.dart

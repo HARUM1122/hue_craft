@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import '../utils/typedefs.dart';
 
-class VerticalOpacityPicker extends StatefulWidget {
+class HorizontalOpacityPicker extends StatefulWidget {
   final HSVColor hsvColor;
   final ColorCallback onSelected;
-  final Border? border;
-  final BorderRadiusGeometry? borderRadius;
+  final Decoration? decoration;
   final double? selectorWidth;
   final double? selectorHeight;
   final EdgeInsets? selectorPadding;
   final BoxDecoration? selectorDecoration;
 
-  const VerticalOpacityPicker({
+  const HorizontalOpacityPicker({
     required this.hsvColor,
     required this.onSelected,
-    this.border,
-    this.borderRadius,
+    this.decoration,
     this.selectorWidth,
     this.selectorHeight,
     this.selectorPadding,
@@ -24,18 +22,18 @@ class VerticalOpacityPicker extends StatefulWidget {
   });
 
   @override
-  State<VerticalOpacityPicker> createState() => _VerticalOpacityPickerState();
+  State<HorizontalOpacityPicker> createState() => _HorizontalOpacityPickerState();
 }
 
-class _VerticalOpacityPickerState extends State<VerticalOpacityPicker> {
+class _HorizontalOpacityPickerState extends State<HorizontalOpacityPicker> {
   void _onDrag(Offset localPosition) {
-    final sliderPercent = _calculatePercentage(localPosition);
+    final double sliderPercent = _calculatePercentage(localPosition);
     widget.onSelected(widget.hsvColor.withAlpha(sliderPercent));
   }
 
   double _calculatePercentage(Offset localPosition) {
     final RenderBox box = context.findRenderObject() as RenderBox;
-    return (1.0 - ((localPosition.dy - 4) / (box.size.height - 8))).clamp(0.0, 1.0);
+    return (1.0 - ((localPosition.dx - 4) / (box.size.width - 8))).clamp(0.0, 1.0);
   }
 
   @override
@@ -45,17 +43,17 @@ class _VerticalOpacityPickerState extends State<VerticalOpacityPicker> {
       onPanUpdate: (details) => _onDrag(details.localPosition),
       child: Stack(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              border: widget.border,
-              borderRadius: widget.borderRadius,
-              gradient: LinearGradient(
-                colors: [
-                  HSVColor.fromAHSV(1.0, widget.hsvColor.hue, widget.hsvColor.saturation, widget.hsvColor.value).toColor(),
-                  HSVColor.fromAHSV(0.0, widget.hsvColor.hue, widget.hsvColor.saturation, widget.hsvColor.value).toColor(),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: widget.decoration ?? BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    HSVColor.fromAHSV(1.0, widget.hsvColor.hue, widget.hsvColor.saturation, widget.hsvColor.value).toColor(),
+                    HSVColor.fromAHSV(0.0, widget.hsvColor.hue, widget.hsvColor.saturation, widget.hsvColor.value).toColor(),
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
               ),
             ),
           ),
@@ -70,12 +68,12 @@ class _VerticalOpacityPickerState extends State<VerticalOpacityPicker> {
 
   Widget _buildSelector() {
     return Align(
-      alignment: Alignment(0.0, 1.0 - (2 * widget.hsvColor.alpha)),
+      alignment: Alignment(1.0 - (2 * widget.hsvColor.alpha), 0.0),
       child: Container(
+        width: widget.selectorWidth ?? 5,
+        height: widget.selectorHeight ?? double.infinity,
         decoration: widget.selectorDecoration,
-        width: widget.selectorWidth ?? double.infinity,
-        height: widget.selectorHeight ?? 5,
-        color: widget.selectorDecoration != null ? null : Colors.white,
+        color: widget.selectorDecoration != null ? null : Colors.black,
       ),
     );
   }

@@ -7,7 +7,7 @@ class SaturationValuePicker extends StatefulWidget {
   final BorderRadius? borderRadius;
   final double? selectorWidth;
   final double? selectorHeight;
-  final BoxDecoration? decoration;
+  final BoxDecoration? selectorDecoration;
 
   const SaturationValuePicker({
     required this.hsvColor,
@@ -15,7 +15,7 @@ class SaturationValuePicker extends StatefulWidget {
     this.borderRadius,
     this.selectorWidth,
     this.selectorHeight,
-    this.decoration,
+    this.selectorDecoration,
     super.key
   });
 
@@ -25,7 +25,7 @@ class SaturationValuePicker extends StatefulWidget {
 
 class _SaturationValuePickerState extends State<SaturationValuePicker> {
   void _onDrag(Offset localPosition) {
-    final percentOffset = _calculatePercentOffset(localPosition);
+    final Offset percentOffset = _calculatePercentOffset(localPosition);
     widget.onSelected(_hsvColorFromPercentOffset(percentOffset));
   }
 
@@ -36,7 +36,6 @@ class _SaturationValuePickerState extends State<SaturationValuePicker> {
       (1.0 - (localPos.dy / box.size.height)).clamp(0.0, 1.0),
     );
   }
-
   HSVColor _hsvColorFromPercentOffset(Offset percentOffset) {
     return HSVColor.fromAHSV(
       widget.hsvColor.alpha,
@@ -74,7 +73,6 @@ class _SaturationValuePickerState extends State<SaturationValuePicker> {
   Widget _buildSelector(Size size) {
     final double saturationPercent = widget.hsvColor.saturation;
     final double darknessPercent = 1.0 - widget.hsvColor.value;
-
     return Positioned(
       left: size.width * saturationPercent,
       top: size.height * darknessPercent,
@@ -83,7 +81,7 @@ class _SaturationValuePickerState extends State<SaturationValuePicker> {
         child: Container(
           width: widget.selectorWidth ?? 10,
           height: widget.selectorHeight ?? 10,
-          decoration: widget.decoration ?? BoxDecoration(
+          decoration: widget.selectorDecoration ?? BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
               color: Colors.black,
@@ -97,9 +95,8 @@ class _SaturationValuePickerState extends State<SaturationValuePicker> {
 }
 
 class ColorPickerPainter extends CustomPainter {
-  double hue;
-
-  ColorPickerPainter({
+  final double hue;
+  const ColorPickerPainter({
     required this.hue,
   });
 
