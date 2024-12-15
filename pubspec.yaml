@@ -1,10 +1,10 @@
 name: hue_craft
 description: You can build your own custom color pickers easily with this package
-version: 0.0.7
+version: 0.0.8
 homepage: https://github.com/HARUM1122/hue_craft
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: ^3.5.0
 
 dependencies:
   flutter:

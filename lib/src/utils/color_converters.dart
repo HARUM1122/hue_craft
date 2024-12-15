@@ -35,15 +35,16 @@ CMYK hsvToCmyk(HSVColor hsvColor) {
 
   return CMYK(cyan: cyan, magenta: magenta, yellow: yellow, black: black, alpha: alpha);
 }
-String hsvToHex(HSVColor hsvColor, {bool alpha = true}) {
+
+String hsvToHex(HSVColor hsvColor, {bool alpha = false}) {
   final Color argbColor = hsvColor.toColor();
   String hexString = "";
   final List<int> values = [argbColor.red, argbColor.green, argbColor.blue];
   if (alpha) {
     values.insert(0, argbColor.alpha);
   }
-  for(final int v in values) {
-    hexString += v.toRadixString(16).padLeft(2,'0');
+  for (final int value in values) {
+    hexString += value.toRadixString(16).padLeft(2,'0');
   }
   return hexString;
 }
