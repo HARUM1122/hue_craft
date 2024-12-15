@@ -12,3 +12,5 @@
 * Made some improvements
 ## 0.0.7
 * Removed main.dart
+## 0.0.8
+* A lot of improvements
