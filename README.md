@@ -1,6 +1,14 @@
 # hue_craft
 A simple package for building custom color pickers in Flutter
 
+
+## Examples
+
+<div style="display: flex; gap: 10px;">
+  <img src="example/screenshots/color_picker_one.jpg" width="200" />
+  <img src="example/screenshots/color_picker_two.jpg" width="200" />
+</div>
+
 # Widgets Included
 - HorizontalHuePicker
 - VerticalHuePicker
