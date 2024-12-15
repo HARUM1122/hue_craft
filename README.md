@@ -1,117 +1,64 @@
 # hue_craft
-A simple package for building custom color pickers in flutter
+A simple package for building custom color pickers in Flutter
 
-## Example
+# Widgets Included
+- HorizontalHuePicker
+- VerticalHuePicker
+- HorizontalOpacityPicker
+- VerticalOpacityPicker
+- SaturationValuePicker
+
+
+If you want to build a custom thumb (or selector) for the widgets provided with this package, you can do so by implementing the CustomPainter class. This allows you to design a thumb that matches your unique style. To do this:
+
+- Create a class, e.g., CustomThumb, that extends CustomPainter. 
+- Implement the paint and shouldRepaint methods to define the appearance of your thumb (or selector).
 
 ```dart
-import 'package:flutter/material.dart';
+class SquareThumbPainter extends CustomPainter {
+  final double width;
+  final double height;
+  final Color squareColor;
+  final double borderWidth;
 
-import 'package:hue_craft/hue_craft.dart'; // Import the package
-
-void main() => runApp(const App());
-
-class App extends StatelessWidget {
-  const App({super.key});
+  SquareThumbPainter({
+    required this.width,
+    required this.height,
+    required this.squareColor,
+    this.borderWidth = 2.0,
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Home(),
+  void paint(Canvas canvas, Size size) {
+    final Paint fillPaint = Paint()..color = squareColor;
+    final Paint borderPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = borderWidth;
+
+    final Rect rect = Rect.fromCenter(
+      center: Offset(size.width / 2, size.height / 2),
+      width: width,
+      height: height,
     );
+    canvas.drawRect(rect, fillPaint);
+    canvas.drawRect(rect, borderPaint);
   }
-}
-
-class Home extends StatefulWidget {
-  const Home({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  HSVColor _color = const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0); // initial color
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Color picker example"),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            SizedBox(
-              width: MediaQuery.of(context).size.width - 50,
-              height: MediaQuery.of(context).size.height / 2.5,
-              child: SaturationValuePicker(
-                hsvColor: _color,
-                onSelected: (hsvColor) {
-                  setState(() {
-                    _color = hsvColor;
-                    print("RGB: ${hsvToRgb(hsvColor).toString()}");
-                    print("CMYK: ${hsvToCmyk(hsvColor).toString()}");
-                  });
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: MediaQuery.of(context).size.width - 50,
-              height: MediaQuery.of(context).size.height / 24,
-              child: HorizontalHuePicker( // You can also use Vertical one
-                hsvColor: _color,
-                selectorWidth: 14,
-                selectorDecoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border.all(color: Colors.black, width: 2),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                onSelected: (hsvColor) {
-                  setState(() {
-                    _color = hsvColor;
-                    print("RGB: ${hsvToRgb(hsvColor).toString()}");
-                    print("CMYK: ${hsvToCmyk(hsvColor).toString()}");
-                  });
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: MediaQuery.of(context).size.width - 50,
-              height: MediaQuery.of(context).size.height / 24,
-              child: HorizontalOpacityPicker( // You can also use Vertical one
-                hsvColor: _color,
-                selectorWidth: 14,
-                selectorDecoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border.all(color: Colors.black, width: 2),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                onSelected: (hsvColor) {
-                  setState(() {
-                    _color = hsvColor;
-                    print("RGB: ${hsvToRgb(hsvColor).toString()}");
-                    print("CMYK: ${hsvToCmyk(hsvColor).toString()}");
-                  });
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              width: MediaQuery.of(context).size.width - 50,
-              height: MediaQuery.of(context).size.height / 24,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.black, width: 2),
-                color: _color.toColor()
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
 ```
+
+Now you can pass its instance to any widget provided with this package. For example:
+
+```dart
+HorizontalHuePicker(
+  customThumbPainter: SquareThumbPainter(...),
+  ...
+)
+```
+
+You can do the same with rest of the widgets.
